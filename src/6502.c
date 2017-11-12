@@ -1,9 +1,10 @@
+#include <stdio.h>
+
 #include "inc/types.h"
 #include "inc/memory.h"
 #include "inc/opcodes.h"
 
-oc1 opcode_decoded_1;
-oc2 opcode_decoded_2;
+
 
 void init()
 {
@@ -38,11 +39,128 @@ void decode()
     
     opcode_decoded_1 = aaacc;
     opcode_decoded_2 = ir;
+    
+    addressing_mode = bbb;
+    
+    if (cc == 0b01)
+    {
+        // correct the addressing mode for '01' opcodetype
+        if (bbb == 0b000)
+        {
+            addressing_mode = indirect_x;
+        }
+        if (bbb == 0b010)
+        {
+            addressing_mode = immediate;
+        }
+    }
+    
+    if (cc == 0b10)
+    {
+        // adjust the addressing mode for STX and LDX
+        if ((opcode_decoded_1 == STX || opcode_decoded_1 == LDX) && addressing_mode == zero_page_x)
+        {
+            addressing_mode = zero_page_y;
+        }
+        if (opcode_decoded_1 == LDX && addressing_mode == absolute_x)
+        {
+            addressing_mode = absolute_y;
+        }
+    }
+    
+    // disable all incorrect opcodes
+    if (((ir & 0x0F) == 0x02 && ir != 0xA2) ||
+         (ir & 0x0F) == 0x03 || (ir & 0x0F) == 0x07 ||
+         (ir & 0x0F) == 0x0B || (ir & 0x0F) == 0x0F)
+    {
+        opcode_decoded_1 = XXX;
+        opcode_decoded_2 = XXX;
+    }
+    
+    if (ir == 0x04 || ir == 0x0C || ir == 0x14 || ir == 0x1A || ir == 0x1C || ir == 0x34 || ir == 0x3A ||
+        ir == 0x3C || ir == 0x44 || ir == 0x54 || ir == 0x5A || ir == 0x5C || ir == 0x64 || ir == 0x74 ||
+        ir == 0x7A || ir == 0x7C || ir == 0x80 || ir == 0x89 || ir == 0x9C || ir == 0x9E ||
+        ir == 0xD4 || ir == 0xDA || ir == 0xDC || ir == 0xF4 || ir == 0xFA || ir == 0xFC)
+    {
+        opcode_decoded_1 = XXX;
+        opcode_decoded_2 = XXX;
+    }
 }
 
 void execute()
 {
-    switch(opcode_decoded_2)
+    /*switch (opcode_decoded_2)
+    {
+        case JSR:
+            printf("abs ");
+            pc++;
+            pc++;
+            break;
+        case BPL: case BMI: case BVC: case BVS:
+        case BCC: case BCS: case BNE: case BEQ:
+            printf("rel ");
+            pc++;
+            break;
+        case TXA: case TXS: case TAX: case TSX: case DEX:
+        case NOP: case CLC: case SEC: case CLI: case SEI:
+        case TYA: case CLV: case CLD: case SED: case PHP:
+        case PLP: case PHA: case PLA: case DEY: case TAY:
+        case INY: case INX: case BRK: case RTI: case RTS:
+            printf("imp ");
+            break;
+        default:
+            switch (addressing_mode)
+            {
+                case immediate:
+                    printf("imm ");
+                    pc++;
+                    break;
+                case zero_page:
+                    printf("zpg ");
+                    pc++;
+                    break;
+                case accumulator:
+                    printf("acc ");
+                    break;
+                case absolute:
+                    printf("abs ");
+                    pc++;
+                    pc++;
+                    break;
+                case indirect_y:
+                    printf("iny ");
+                    pc++;
+                    break;
+                case zero_page_x:
+                    printf("zpx ");
+                    pc++;
+                    break;
+                case absolute_y:
+                    printf("aby ");
+                    pc++;
+                    pc++;
+                    break;
+                case absolute_x:
+                    printf("abx ");
+                    pc++;
+                    pc++;
+                    break;
+                case indirect_x:
+                    printf("inx ");
+                    pc++;
+                    break;
+                case zero_page_y:
+                    printf("zpy ");
+                    pc++;
+                    break;
+                default:
+                    
+                    break;
+            }
+            break;
+    }*/  
+
+    switch (opcode_decoded_2)
     {
         case BRK:
             return brk();
@@ -112,6 +230,8 @@ void execute()
             return dex();
         case NOP:
             return nop();
+        case XXX:
+            return xxx();
     }
     
     switch (opcode_decoded_1)
@@ -162,15 +282,22 @@ void execute()
             return dec();
         case INC:
             return inc();
+        case XXX:
+            return xxx();
     }
 }
 
 void run()
 {
-    while (pc != 0)
+    //while (pc != 0)
     {
-        fetch();
-        decode();
-        execute();
+        //fetch();
+        for (int i = 0x00; i <= 0xFF; i++)
+        {
+            ir = i;
+            decode();
+            execute();
+        }
     }
+    
 }

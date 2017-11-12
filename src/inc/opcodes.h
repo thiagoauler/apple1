@@ -76,12 +76,34 @@ enum opcodes_comp
     TAX = 0xAA,
     TSX = 0xBA,
     DEX = 0xCA,
-    NOP = 0xEA
+    NOP = 0xEA,
+    
+    XXX = 0xFF
+};
+
+enum address_mode
+{
+    immediate   = 0b000,
+    zero_page   = 0b001,
+    accumulator = 0b010,
+    absolute    = 0b011,
+    indirect_y  = 0b100,
+    zero_page_x = 0b101,
+    absolute_y  = 0b110,
+    absolute_x  = 0b111,
+    indirect_x,
+    zero_page_y
 };
 
 typedef enum opcodes oc1;
 typedef enum opcodes_comp oc2;
+typedef enum address_mode am;
 
+oc1 opcode_decoded_1;
+oc2 opcode_decoded_2;
+am addressing_mode;
+
+void xxx(); // invalid opcode
 void adc(); // add memory to accumalator with carry
 void and(); // and memory with accumulator
 void asl(); // shift left one bit (memory on accumulator)
