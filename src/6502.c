@@ -115,7 +115,7 @@ void execute()
         case EOR: return eor();
         case INC: return inc();
         case JMP: return jmp();
-        case JPA: return jmp();
+        case JPA: return jpa();
         case LDA: return lda();
         case LDX: return ldx();
         case LDY: return ldy();
@@ -132,7 +132,7 @@ void execute()
 
 void run()
 {
-    while (pc != 0)
+    while (1)
     {
         fetch();
         decode();

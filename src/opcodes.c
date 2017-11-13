@@ -70,31 +70,55 @@ void fetch_operand()
 void adc()
 {
     // add memory to accumalator with carry
+    fetch_operand();
+    ac = ac + operand + C_IS_SET;
 }
 
 void and()
 {
     // and memory with accumulator
+    fetch_operand();
+    ac = ac & operand;
 }
 
 void asl()
 {
-    // shift left one bit (memory on accumulator)
+    // shift left one bit (memory or accumulator)
+    fetch_operand();
+    operand = operand << 1;
 }
 
 void bcc()
 {
     // branch on carry clear
+    if(!C_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void bcs()
 {
     // branch on carry set
+    if(C_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void beq()
 {
     // branch on result zero
+    if(Z_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void bit()
@@ -105,16 +129,34 @@ void bit()
 void bmi()
 {
     // branch on result minus
+    if(N_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void bne()
 {
     // branch on result not zero
+    if(!Z_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void bpl()
 {
     // branch on result plus
+    if(!N_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void brk()
@@ -125,31 +167,47 @@ void brk()
 void bvc()
 {
     // branch on overflow clear
+    if(!V_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void bvs()
 {
     // branch on overflow set
+    if(V_IS_SET)
+    {
+        address = read_byte(pc);
+        address = address + pc;
+        pc = address;
+    }
 }
 
 void clc()
 {
     // clear carry flag
+    C_UNSET;
 }
 
 void cld()
 {
     // clear decimal mode
+    D_UNSET;
 }
 
 void cli()
 {
     // clear interrupt disable bit
+    I_UNSET;
 }
 
 void clv()
 {
     // clear overflow flag
+    V_UNSET;
 }
 
 void cmp()
@@ -190,21 +248,35 @@ void eor()
 void inc()
 {
     // increment memory by one
+    operand = operand + 1;
+    write_mem(address, operand); 
 }
 
 void inx()
 {
     // increment index x by one
+    x = x + 1;
 }
 
 void iny()
 {
     // increment index y by one
+    y = y + 1;
 }
 
 void jmp()
 {
-    // jump to new location
+    // jump to new location (indirect)
+    address = read_word(pc);
+    address = read_word(address);
+    pc = address;
+}
+
+void jpa()
+{
+    // jump to new location (absolute)
+    address = read_word(pc);
+    pc = address;
 }
 
 void jsr()

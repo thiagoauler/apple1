@@ -8,6 +8,7 @@ db ac; // accumulator
 db x;  // x register
 db y;  // y register
 db sp; // stack pointer
+db sr; // status register
 db ir; // intruction register
 
 enum opcodes_table
@@ -29,8 +30,7 @@ enum opcodes_list
     RTS = 0x60, BVS = 0x70, BCC = 0x90, BCS = 0xB0, BNE = 0xD0, BEQ = 0xF0,
     PHP = 0x08, CLC = 0x18, PLP = 0x28, SEC = 0x38, PHA = 0x48, CLI = 0x58, PLA = 0x68, SEI = 0x78,
     DEY = 0x88, TYA = 0x98, TAY = 0xA8, CLV = 0xB8, INY = 0xC8, CLD = 0xD8, INX = 0xE8, SED = 0xF8,
-    TXA = 0x8A, TXS = 0x9A, TAX = 0xAA, TSX = 0xBA, DEX = 0xCA, NOP = 0xEA,
-    XXX = 0xFF
+    TXA = 0x8A, TXS = 0x9A, TAX = 0xAA, TSX = 0xBA, DEX = 0xCA, NOP = 0xEA
 };
 
 enum address_mode
@@ -55,7 +55,7 @@ am address_mode;
 
 void adc(); // add memory to accumalator with carry
 void and(); // and memory with accumulator
-void asl(); // shift left one bit (memory on accumulator)
+void asl(); // shift left one bit (memory or accumulator)
 void bcc(); // branch on carry clear
 void bcs(); // branch on carry set
 void beq(); // branch on result zero
@@ -80,7 +80,8 @@ void eor(); // exclusive-or memory with accumulator
 void inc(); // increment memory by one
 void inx(); // increment index x by one
 void iny(); // increment index y by one
-void jmp(); // jump to new location
+void jmp(); // jump to new location (indirect)
+void jpa(); // jump to new location (absolute)
 void jsr(); // jump to new location saving return address
 void lda(); // load accumulator with memory
 void ldx(); // load index x with memory
@@ -109,5 +110,27 @@ void tsx(); // transfer stack pointer to index x
 void txa(); // transfer index x to accumulator
 void txs(); // transfer index x to stack pointer
 void tya(); // transfer index y to accumulator
+
+#define N_IS_SET    (sr & 0b10000000) // negative
+#define N_SET   sr = sr | 0b10000000
+#define N_UNSET sr = sr & 0b01111111
+#define V_IS_SET    (sr & 0b01000000) // overflow
+#define V_SET   sr = sr | 0b01000000
+#define V_UNSET sr = sr & 0b10111111
+#define B_IS_SET    (sr & 0b00010000) // break
+#define B_SET   sr = sr | 0b00010000
+#define B_UNSET sr = sr & 0b11101111
+#define D_IS_SET    (sr & 0b00001000) // decimal mode
+#define D_SET   sr = sr | 0b00001000
+#define D_UNSET sr = sr & 0b11110111
+#define I_IS_SET    (sr & 0b00000100) // interrupt disabled
+#define I_SET   sr = sr | 0b00000100
+#define I_UNSET sr = sr & 0b11111011
+#define Z_IS_SET    (sr & 0b00000010) // zero
+#define Z_SET   sr = sr | 0b00000010
+#define Z_UNSET sr = sr & 0b11111101
+#define C_IS_SET    (sr & 0b00000001) // carry
+#define C_SET   sr = sr | 0b00000001
+#define C_UNSET sr = sr & 0b11111110
 
 #endif
