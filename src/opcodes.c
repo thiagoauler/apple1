@@ -35,7 +35,7 @@ void fetch_operand()
             operand = ac;
             break;
         case absolute:
-            address = read_word(pc)
+            address = read_word(pc);
             operand = read_byte(address);
             pc = pc + 2;
         case absolute_x:
