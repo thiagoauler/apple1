@@ -3,7 +3,8 @@
 
 #include "types.h"
 
-  db read_memory(dw address);
-void write_memory(dw address, db data);
+  db read_byte(dw address);
+  dw read_word(dw address);
+void write_mem(dw address, db data);
 
 #endif

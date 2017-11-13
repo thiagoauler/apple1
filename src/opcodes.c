@@ -1,56 +1,29 @@
-#include <stdio.h>
-
 #include "inc/opcodes.h"
 #include "inc/memory.h"
 
-dw fetch_address()
-{
-    dw word;
-    db low_byte;
-    db high_byte;
-    
-    low_byte = read_memory(pc);
-    pc = pc + 1;
-    
-    high_byte = read_memory(pc);
-    pc = pc + 1;
-    
-    word = high_byte << 8;  // shifts high byte to its place
-    word = word | low_byte; // appends low byte to form the complete word
-    
-    return word;
-}
-
-db decode_operand()
+db fetch_operand()
 {
     db operand;
-    db byte;
-    dw word;
 
-    switch (addressing_mode)
+    switch (address_mode)
     {
         case immediate:
-            operand = read_memory(pc);
+            operand = read_byte(pc);
             pc = pc + 1;
             break;
         case zero_page:
-            byte = read_memory(pc);
-            word = 0x0000 | byte;
-            operand = read_memory(word);
+            operand = read_byte(pc);
+            operand = read_byte(operand);
             pc = pc + 1;
             break;
         case zero_page_x:
-            byte = read_memory(pc);
-            word = 0x0000 | byte;
-            word = word + x;
-            operand = read_memory(word);
+            operand = read_byte(pc);
+            operand = read_byte(operand + x);
             pc = pc + 1;
             break;
         case zero_page_y:
-            byte = read_memory(pc);
-            word = 0x0000 | byte;
-            word = word + y;
-            operand = read_memory(word);
+            operand = read_byte(pc);
+            operand = read_byte(operand + y);
             pc = pc + 1;
             break;
         case accumulator:

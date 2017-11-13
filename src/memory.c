@@ -34,7 +34,7 @@
   
 db ram_memory[4096]; // total memory: 4KB
 
-db read_memory(dw address)
+db read_byte(dw address)
 {
     if (address >= 0x0000 && address <= 0x0FFF)
     {
@@ -54,7 +54,23 @@ db read_memory(dw address)
     }
 }
 
-void write_memory(dw address, db data)
+dw read_word(dw address)
+{
+    dw word;
+    db low_byte;
+    db high_byte;
+    
+    low_byte  = read_byte(address);
+    high_byte = read_byte(address + 1);
+    
+    word = high_byte << 8;  // shifts high byte to its place
+    word = word | low_byte; // appends low byte to form the complete word
+    
+    // the word is store in little-endian format on the memory
+    return word;
+}
+
+void write_mem(dw address, db data)
 {
     if (address >= 0x0000 && address <= 0x0FFF)
     {

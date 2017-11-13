@@ -2,29 +2,18 @@
 #include "inc/memory.h"
 #include "inc/opcodes.h"
 
-oc1 opcode_decoded_1;
-oc2 opcode_decoded_2;
+ocl opcode_decoded_1;
+oct opcode_decoded_2;
 
 void init()
 {
-    // pc is set using 0xFFFC-0xFFFD
-    
-    dw word;
-    db low_byte;
-    db high_byte;
-    
-    low_byte  = read_memory(0xFFFD);
-    high_byte = read_memory(0xFFFC);
-    
-    word = high_byte << 8;  // shifts high byte to its place
-    word = word | low_byte; // appends low byte to form the complete word
-    
-    pc = word;
+    // pc is set using 0xFFFC
+    pc = read_word(0xFFFC);
 }
 
 void fetch()
 {
-    ir = read_memory(pc);
+    ir = read_byte(pc);
     pc = pc + 1;
 }
 
@@ -40,34 +29,35 @@ void decode()
     
     db aaacc = (aaa << 2) | cc;
     
-    opcode_decoded_1 = aaacc;
-    opcode_decoded_2 = ir;
+    opcode_decoded_1 = ir;
+    opcode_decoded_2 = aaacc;
     
-    addressing_mode = bbb;
+    
+    address_mode = bbb;
     
     if (cc == 0b01)
     {
         // correct the addressing mode for '01' opcodetype
         if (bbb == 0b000)
         {
-            addressing_mode = indirect_x;
+            address_mode = indirect_x;
         }
         if (bbb == 0b010)
         {
-            addressing_mode = immediate;
+            address_mode = immediate;
         }
     }
     
     if (cc == 0b10)
     {
         // adjust the addressing mode for STX and LDX
-        if ((opcode_decoded_1 == STX || opcode_decoded_1 == LDX) && addressing_mode == zero_page_x)
+        if ((aaacc == STX || aaacc == LDX) && address_mode == zero_page_x)
         {
-            addressing_mode = zero_page_y;
+            address_mode = zero_page_y;
         }
-        if (opcode_decoded_1 == LDX && addressing_mode == absolute_x)
+        if (aaacc == LDX && address_mode == absolute_x)
         {
-            addressing_mode = absolute_y;
+            address_mode = absolute_y;
         }
     }
     
@@ -78,7 +68,7 @@ void decode()
     {
         opcode_decoded_1 = XXX;
         opcode_decoded_2 = XXX;
-        addressing_mode  = XXX;
+        address_mode  = XXX;
     }
     
     if (ir == 0x04 || ir == 0x0C || ir == 0x14 || ir == 0x1A || ir == 0x1C || ir == 0x34 || ir == 0x3A ||
@@ -88,136 +78,77 @@ void decode()
     {
         opcode_decoded_1 = XXX;
         opcode_decoded_2 = XXX;
-        addressing_mode  = XXX;
+        address_mode  = XXX;
     }
 }
 
 void execute()
 {
-    switch (opcode_decoded_2)
-    {
-        case BRK:
-            return brk();
-        case BPL:
-            return bpl();
-        case JSR:
-            return jsr();
-        case BMI:
-            return bmi();
-        case RTI:
-            return rti();
-        case BVC:
-            return bvc();
-        case RTS:
-            return rts();
-        case BVS:
-            return bvs();
-        case BCC:
-            return bcc();
-        case BCS:
-            return bcs();
-        case BNE:
-            return bne();
-        case BEQ:
-            return beq();
-        case PHP:
-            return php();
-        case CLC:
-            return clc();
-        case PLP:
-            return plp();
-        case SEC:
-            return sec();
-        case PHA:
-            return pha();
-        case CLI:
-            return cli();
-        case PLA:
-            return pla();
-        case SEI:
-            return sei();
-        case DEY:
-            return dey();
-        case TYA:
-            return tya();
-        case TAY:
-            return tay();
-        case CLV:
-            return clv();
-        case INY:
-            return iny();
-        case CLD:
-            return cld();
-        case INX:
-            return inx();
-        case SED:
-            return sed();
-        case TXA:
-            return txa();
-        case TXS:
-            return txs();
-        case TAX:
-            return tax();
-        case TSX:
-            return tsx();
-        case DEX:
-            return dex();
-        case NOP:
-            return nop();
-        case XXX:
-            return xxx();
-    }
-    
     switch (opcode_decoded_1)
     {
-        case BIT:
-            return bit();
-        case JMP:
-            return jmp();
-        case JPA: // JMP (absolute)
-            return jmp();
-        case STY:
-            return sty();
-        case LDY:
-            return ldy();
-        case CPY:
-            return cpy();
-        case CPX:
-            return cpx();
-        case ORA:
-            return ora();
-        case AND:
-            return and();
-        case EOR:
-            return eor();
-        case ADC:
-            return adc();
-        case STA:
-            return sta();
-        case LDA:
-            return lda();
-        case CMP:
-            return cmp();
-        case SBC:
-            return sbc();
-        case ASL:
-            return asl();
-        case ROL:
-            return rol();
-        case LSR:
-            return lsr();
-        case ROR:
-            return ror();
-        case STX:
-            return stx();
-        case LDX:
-            return ldx();
-        case DEC:
-            return dec();
-        case INC:
-            return inc();
-        case XXX:
-            return xxx();
+        case BCC: return bcc();
+        case BCS: return bcs();
+        case BEQ: return beq();
+        case BMI: return bmi();
+        case BNE: return bne();
+        case BPL: return bpl();
+        case BRK: return brk();
+        case BVC: return bvc();
+        case BVS: return bvs();
+        case CLC: return clc();
+        case CLD: return cld();
+        case CLI: return cli();
+        case CLV: return clv();
+        case DEX: return dex();
+        case DEY: return dey();
+        case INX: return inx();
+        case INY: return iny();
+        case JSR: return jsr();
+        case NOP: return nop();
+        case PHA: return pha();
+        case PHP: return php();
+        case PLA: return pla();
+        case PLP: return plp();
+        case RTI: return rti();
+        case RTS: return rts();
+        case SEC: return sec();
+        case SED: return sed();
+        case SEI: return sei();
+        case TAX: return tax();
+        case TAY: return tay();
+        case TSX: return tsx();
+        case TXA: return txa();
+        case TXS: return txs();
+        case TYA: return tya();
+        case XXX: return xxx();
+    }
+    
+    switch (opcode_decoded_2)
+    {
+        case ADC: return adc();
+        case AND: return and();
+        case ASL: return asl();
+        case BIT: return bit();
+        case CMP: return cmp();
+        case CPX: return cpx();
+        case CPY: return cpy();
+        case DEC: return dec();
+        case EOR: return eor();
+        case INC: return inc();
+        case JMP: return jmp();
+        case JPA: return jmp();
+        case LDA: return lda();
+        case LDX: return ldx();
+        case LDY: return ldy();
+        case LSR: return lsr();
+        case ORA: return ora();
+        case ROL: return rol();
+        case ROR: return ror();
+        case SBC: return sbc();
+        case STA: return sta();
+        case STX: return stx();
+        case STY: return sty();
+        case XXX: return xxx();
     }
 }
 
