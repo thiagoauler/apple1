@@ -53,7 +53,6 @@ typedef enum address_mode  am;
 
 am address_mode;
 
-void xxx(); // invalid opcode
 void adc(); // add memory to accumalator with carry
 void and(); // and memory with accumulator
 void asl(); // shift left one bit (memory on accumulator)

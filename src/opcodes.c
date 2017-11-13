@@ -1,43 +1,70 @@
 #include "inc/opcodes.h"
 #include "inc/memory.h"
 
-db fetch_operand()
-{
-    db operand;
+dw address;
+db operand;
 
+void fetch_operand()
+{
     switch (address_mode)
     {
         case immediate:
-            operand = read_byte(pc);
+            address = pc;
+            operand = read_byte(address);
             pc = pc + 1;
             break;
         case zero_page:
-            operand = read_byte(pc);
-            operand = read_byte(operand);
+            address = read_byte(pc);
+            operand = read_byte(address);
             pc = pc + 1;
             break;
         case zero_page_x:
-            operand = read_byte(pc);
-            operand = read_byte(operand + x);
+            address = read_byte(pc);
+            address = address + x;
+            operand = read_byte(address);
             pc = pc + 1;
             break;
         case zero_page_y:
-            operand = read_byte(pc);
-            operand = read_byte(operand + y);
+            address = read_byte(pc);
+            address = address + y;
+            operand = read_byte(address);
             pc = pc + 1;
             break;
         case accumulator:
+            address = pc;
             operand = ac;
             break;
+        case absolute:
+            address = read_word(pc)
+            operand = read_byte(address);
+            pc = pc + 2;
+        case absolute_x:
+            address = read_word(pc);
+            address = address + x;
+            operand = read_byte(address);
+            pc = pc + 2;
+            break;
+        case absolute_y:
+            address = read_word(pc);
+            address = address + y;
+            operand = read_byte(address);
+            pc = pc + 2;
+            break;
+        case indirect_x:
+            address = read_byte(pc);
+            address = address + x;
+            address = read_word(address);
+            operand = read_byte(address);
+            pc = pc + 1;
+            break;
+        case indirect_y:
+            address = read_byte(pc);
+            address = read_word(address);
+            address = address + y;
+            operand = read_byte(address);
+            pc = pc + 1;
+            break;
     }
-    
-    return operand;
-}
-
-void xxx()
-{
-    // invalid opcode
-    return nop();
 }
 
 void adc()

@@ -100,7 +100,6 @@ void execute()
         case TXA: return txa();
         case TXS: return txs();
         case TYA: return tya();
-        case XXX: return xxx();
     }
     
     switch (opcode_in_table)
@@ -128,7 +127,6 @@ void execute()
         case STA: return sta();
         case STX: return stx();
         case STY: return sty();
-        case XXX: return xxx();
     }
 }
 
