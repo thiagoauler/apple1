@@ -2,8 +2,8 @@
 #include "inc/memory.h"
 #include "inc/opcodes.h"
 
-ocl opcode_decoded_1;
-oct opcode_decoded_2;
+ocl opcode_in_list;
+oct opcode_in_table;
 
 void init()
 {
@@ -29,8 +29,8 @@ void decode()
     
     db aaacc = (aaa << 2) | cc;
     
-    opcode_decoded_1 = ir;
-    opcode_decoded_2 = aaacc;
+    opcode_in_list = ir;
+    opcode_in_table = aaacc;
     
     
     address_mode = bbb;
@@ -60,31 +60,11 @@ void decode()
             address_mode = absolute_y;
         }
     }
-    
-    // disable all incorrect opcodes
-    if (((ir & 0x0F) == 0x02 && ir != 0xA2) ||
-         (ir & 0x0F) == 0x03 || (ir & 0x0F) == 0x07 ||
-         (ir & 0x0F) == 0x0B || (ir & 0x0F) == 0x0F)
-    {
-        opcode_decoded_1 = XXX;
-        opcode_decoded_2 = XXX;
-        address_mode  = XXX;
-    }
-    
-    if (ir == 0x04 || ir == 0x0C || ir == 0x14 || ir == 0x1A || ir == 0x1C || ir == 0x34 || ir == 0x3A ||
-        ir == 0x3C || ir == 0x44 || ir == 0x54 || ir == 0x5A || ir == 0x5C || ir == 0x64 || ir == 0x74 ||
-        ir == 0x7A || ir == 0x7C || ir == 0x80 || ir == 0x89 || ir == 0x9C || ir == 0x9E ||
-        ir == 0xD4 || ir == 0xDA || ir == 0xDC || ir == 0xF4 || ir == 0xFA || ir == 0xFC)
-    {
-        opcode_decoded_1 = XXX;
-        opcode_decoded_2 = XXX;
-        address_mode  = XXX;
-    }
 }
 
 void execute()
 {
-    switch (opcode_decoded_1)
+    switch (opcode_in_list)
     {
         case BCC: return bcc();
         case BCS: return bcs();
@@ -123,7 +103,7 @@ void execute()
         case XXX: return xxx();
     }
     
-    switch (opcode_decoded_2)
+    switch (opcode_in_table)
     {
         case ADC: return adc();
         case AND: return and();
