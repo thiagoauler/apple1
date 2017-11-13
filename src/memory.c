@@ -1,9 +1,10 @@
 #include "inc/types.h"
-#include "inc/ram.h"
 #include "inc/rom.h"
 #include "inc/memory.h"
 
 /*
+    
+ memory model:
 
  + - - - - +
  | 0000    |
@@ -30,36 +31,36 @@
  + - - - - +
 
  */
+  
+db ram_memory[4096]; // total memory: 4KB
 
-void mem_read()
+db read_memory(dw address)
 {
-    if (mem.mar >= 0x0000 && mem.mar <= 0x0FFF)
+    if (address >= 0x0000 && address <= 0x0FFF)
     {
         // 4KB memory RAM
-        ram.mar = mem.mar;
-        ram_read();
-        mem.mdr = ram.mdr;
+        return ram_memory[address];
     }
-    else if (mem.mar >= 0xFF00 && mem.mar <= 0xFFFF)
+    else if (address >= 0xFF00 && address <= 0xFFFF)
     {
         // wozmon ROM
-        rom.mar = mem.mar & 0x00FF;
-        rom_read();
-        mem.mdr = rom.mdr;
+        address = address & 0x00FF;
+        return rom_memory[address];
     }
     else
     {
-        mem.mdr = 0x00;
+        // unused memory
+        return 0x00;
     }
 }
 
-void mem_write()
+void write_memory(dw address, db data)
 {
-    if (mem.mar >= 0x0000 && mem.mar <= 0x0FFF)
+    if (address >= 0x0000 && address <= 0x0FFF)
     {
         // 4KB memory RAM
-        ram.mar = mem.mar;
-        ram.mdr = mem.mdr;
-        ram_write();
+        ram_memory[address] = data;
     }
+    
+    // any other addressed memory will be ignored on write
 }

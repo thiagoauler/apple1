@@ -3,23 +3,16 @@
 #include "inc/opcodes.h"
 #include "inc/memory.h"
 
-db fetch_operand(dw address)
-{
-    mem.mar = address;
-    mem_read();
-    return mem.mdr;
-}
-
 dw fetch_address()
 {
     dw word;
     db low_byte;
     db high_byte;
     
-    low_byte = fetch_operand(pc);
+    low_byte = read_memory(pc);
     pc = pc + 1;
     
-    high_byte = fetch_operand(pc);
+    high_byte = read_memory(pc);
     pc = pc + 1;
     
     word = high_byte << 8;  // shifts high byte to its place
@@ -37,27 +30,27 @@ db decode_operand()
     switch (addressing_mode)
     {
         case immediate:
-            operand = fetch_operand(pc);
+            operand = read_memory(pc);
             pc = pc + 1;
             break;
         case zero_page:
-            byte = fetch_operand(pc);
+            byte = read_memory(pc);
             word = 0x0000 | byte;
-            operand = fetch_operand(word);
+            operand = read_memory(word);
             pc = pc + 1;
             break;
         case zero_page_x:
-            byte = fetch_operand(pc);
+            byte = read_memory(pc);
             word = 0x0000 | byte;
             word = word + x;
-            operand = fetch_operand(word);
+            operand = read_memory(word);
             pc = pc + 1;
             break;
         case zero_page_y:
-            byte = fetch_operand(pc);
+            byte = read_memory(pc);
             word = 0x0000 | byte;
             word = word + y;
-            operand = fetch_operand(word);
+            operand = read_memory(word);
             pc = pc + 1;
             break;
         case accumulator:

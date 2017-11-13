@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "inc/types.h"
 #include "inc/memory.h"
 #include "inc/opcodes.h"
@@ -10,20 +8,24 @@ oc2 opcode_decoded_2;
 void init()
 {
     // pc is set using 0xFFFC-0xFFFD
-    mem.mar = 0xFFFD;
-    mem_read();
-    pc = mem.mdr << 8;
-    mem.mar = 0xFFFC;
-    mem_read();
-    pc = mem.mdr + pc;
+    
+    dw word;
+    db low_byte;
+    db high_byte;
+    
+    low_byte  = read_memory(0xFFFD);
+    high_byte = read_memory(0xFFFC);
+    
+    word = high_byte << 8;  // shifts high byte to its place
+    word = word | low_byte; // appends low byte to form the complete word
+    
+    pc = word;
 }
 
 void fetch()
 {
-    mem.mar = pc;
-    mem_read();
-    ir = mem.mdr;
-    pc++;
+    ir = read_memory(pc);
+    pc = pc + 1;
 }
 
 void decode()

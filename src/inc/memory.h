@@ -1,11 +1,9 @@
-#ifndef _APPLE_I_MEMORY_LOGIC_H_
-#define _APPLE_I_MEMORY_LOGIC_H_
+#ifndef _APPLE_I_MEMORY_H_
+#define _APPLE_I_MEMORY_H_
 
 #include "types.h"
 
-mr mem; // memory "glue" logic
-
-void mem_read();
-void mem_write();
+  db read_memory(dw address);
+void write_memory(dw address, db data);
 
 #endif
