@@ -99,8 +99,6 @@ typedef enum opcodes oc1;
 typedef enum opcodes_comp oc2;
 typedef enum address_mode am;
 
-oc1 opcode_decoded_1;
-oc2 opcode_decoded_2;
 am addressing_mode;
 
 void xxx(); // invalid opcode

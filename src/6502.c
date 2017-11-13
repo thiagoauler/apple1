@@ -4,7 +4,8 @@
 #include "inc/memory.h"
 #include "inc/opcodes.h"
 
-
+oc1 opcode_decoded_1;
+oc2 opcode_decoded_2;
 
 void init()
 {
@@ -75,6 +76,7 @@ void decode()
     {
         opcode_decoded_1 = XXX;
         opcode_decoded_2 = XXX;
+        addressing_mode  = XXX;
     }
     
     if (ir == 0x04 || ir == 0x0C || ir == 0x14 || ir == 0x1A || ir == 0x1C || ir == 0x34 || ir == 0x3A ||
@@ -84,82 +86,12 @@ void decode()
     {
         opcode_decoded_1 = XXX;
         opcode_decoded_2 = XXX;
+        addressing_mode  = XXX;
     }
 }
 
 void execute()
 {
-    /*switch (opcode_decoded_2)
-    {
-        case JSR:
-            printf("abs ");
-            pc++;
-            pc++;
-            break;
-        case BPL: case BMI: case BVC: case BVS:
-        case BCC: case BCS: case BNE: case BEQ:
-            printf("rel ");
-            pc++;
-            break;
-        case TXA: case TXS: case TAX: case TSX: case DEX:
-        case NOP: case CLC: case SEC: case CLI: case SEI:
-        case TYA: case CLV: case CLD: case SED: case PHP:
-        case PLP: case PHA: case PLA: case DEY: case TAY:
-        case INY: case INX: case BRK: case RTI: case RTS:
-            printf("imp ");
-            break;
-        default:
-            switch (addressing_mode)
-            {
-                case immediate:
-                    printf("imm ");
-                    pc++;
-                    break;
-                case zero_page:
-                    printf("zpg ");
-                    pc++;
-                    break;
-                case accumulator:
-                    printf("acc ");
-                    break;
-                case absolute:
-                    printf("abs ");
-                    pc++;
-                    pc++;
-                    break;
-                case indirect_y:
-                    printf("iny ");
-                    pc++;
-                    break;
-                case zero_page_x:
-                    printf("zpx ");
-                    pc++;
-                    break;
-                case absolute_y:
-                    printf("aby ");
-                    pc++;
-                    pc++;
-                    break;
-                case absolute_x:
-                    printf("abx ");
-                    pc++;
-                    pc++;
-                    break;
-                case indirect_x:
-                    printf("inx ");
-                    pc++;
-                    break;
-                case zero_page_y:
-                    printf("zpy ");
-                    pc++;
-                    break;
-                default:
-                    
-                    break;
-            }
-            break;
-    }*/  
-
     switch (opcode_decoded_2)
     {
         case BRK:
@@ -289,15 +221,11 @@ void execute()
 
 void run()
 {
-    //while (pc != 0)
+    while (pc != 0)
     {
-        //fetch();
-        for (int i = 0x00; i <= 0xFF; i++)
-        {
-            ir = i;
-            decode();
-            execute();
-        }
+        fetch();
+        decode();
+        execute();
     }
     
 }
