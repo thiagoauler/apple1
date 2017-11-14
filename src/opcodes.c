@@ -67,6 +67,35 @@ void fetch_operand()
     }
 }
 
+void adjustNZ(db a)
+{
+    if (a == 0) { Z_SET; } else { Z_UNSET;}
+    a = a >> 7;
+    if (a == 0) { N_SET; } else { N_UNSET; } 
+}
+
+db adder(db a, db b)
+{
+    db r = a + b;
+    
+    // todo: adjust carry flag
+    // todo: adjust overflow flag
+    adjustNZ(r);
+    
+    return r;
+}
+
+db subtractor(db a, db b)
+{
+    db r = a - b;
+    
+    // todo: adjust carry flag
+    // todo: adjust overflow flag
+    adjustNZ(r);
+    
+    return r;
+}
+
 void adc()
 {
     // add memory to accumalator with carry
