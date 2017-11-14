@@ -68,11 +68,40 @@ void fetch_operand()
     }
 }
 
+void adjustNZ(db a)
+{
+    if (a == 0) { Z_SET; } else { Z_UNSET;}
+    a = a >> 7;
+    if (a == 0) { N_SET; } else { N_UNSET; } 
+}
+
+db adder(db a, db b)
+{
+    db r = a + b;
+    
+    // todo: adjust carry flag
+    // todo: adjust overflow flag
+    adjustNZ(r);
+    
+    return r;
+}
+
+db subtractor(db a, db b)
+{
+    db r = a - b;
+    
+    // todo: adjust carry flag
+    // todo: adjust overflow flag
+    adjustNZ(r);
+    
+    return r;
+}
+
 void adc()
 {
     // add memory to accumulator with carry
     fetch_operand();
-    ac = ac + operand + C_IS_SET;
+    ac = adder(ac, operand + C_IS_SET);
 }
 
 void and()
@@ -80,6 +109,7 @@ void and()
     // and memory with accumulator
     fetch_operand();
     ac = ac & operand;
+    adjustNZ(ac);
 }
 
 void asl()
@@ -87,6 +117,7 @@ void asl()
     // shift left one bit (memory or accumulator)
     fetch_operand();
     operand = operand << 1;
+    adjustNZ(operand);
 }
 
 void bcc()
@@ -229,16 +260,23 @@ void cpy()
 void dec()
 {
     // decrement memory by one
+    operand = operand - 1;
+    write_mem(address, operand);
+    adjustNZ(operand);
 }
 
 void dex()
 {
     // decrement index x by one
+    x = x - 1;
+    adjustNZ(x);
 }
 
 void dey()
 {
     // decrement index y by one
+    y = y - 1;
+    adjustNZ(y);
 }
 
 void eor()
@@ -257,12 +295,14 @@ void inx()
 {
     // increment index x by one
     x = x + 1;
+    adjustNZ(x);
 }
 
 void iny()
 {
     // increment index y by one
     y = y + 1;
+    adjustNZ(y);
 }
 
 void jmp()
@@ -288,16 +328,19 @@ void jsr()
 void lda()
 {
     // load accumulator with memory
+    ac = operand;
 }
 
 void ldx()
 {
     // load index x with memory
+    x = operand;
 }
 
 void ldy()
 {
     // load index y with memory
+    y = operand;
 }
 
 void lsr()
@@ -363,59 +406,80 @@ void sbc()
 void sec()
 {
     // set carry flag
+    C_SET;
 }
 
 void sed()
 {
     // set decimal flag
+    D_SET;
 }
 
 void sei()
 {
     // set interrupt disable status
+    I_SET;
 }
 
 void sta()
 {
     // store accumulator in memory
+    write_mem(address, ac);
+    adjustNZ(y);
 }
 
 void stx()
 {
     // store index x in memory
+    write_mem(address, x);
+    adjustNZ(x);
 }
 
 void sty()
 {
     // store index y in memory
+    write_mem(address, y);
+    adjustNZ(y);
 }
 
 void tax()
 {
     // transfer accumulator to index x
+    x = ac;
+    adjustNZ(x);
 }
 
 void tay()
 {
     // transfer accumulator to index y
+    y = ac;
+    adjustNZ(y);
 }
 
 void tsx()
 {
     // transfer stack pointer to index x
+    x = sp;
+    adjustNZ(x);
 }
 
 void txa()
 {
     // transfer index x to accumulator
+    ac = x;
+    adjustNZ(x);
 }
 
 void txs()
 {
     // transfer index x to stack pointer
+    sp = x;
+    adjustNZ(x);
 }
 
 void tya()
 {
     // transfer index y to accumulator
+    ac = y;
+    adjustNZ(y);
 }
