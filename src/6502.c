@@ -9,6 +9,12 @@ void init()
 {
     // pc is set using 0xFFFC
     pc = read_word(0xFFFC);
+    
+    write_mem(0xD010, 'T');
+    write_mem(0xD010, 'E');
+    write_mem(0xD010, 'S');
+    write_mem(0xD010, 'T');
+    write_mem(0xD010, 'S');
 }
 
 void fetch()
@@ -32,12 +38,11 @@ void decode()
     opcode_in_list = ir;
     opcode_in_table = aaacc;
     
-    
     address_mode = bbb;
     
     if (cc == 0b01)
     {
-        // correct the addressing mode for '01' opcodetype
+        // correct the addressing mode for '01' opcode type
         if (bbb == 0b000)
         {
             address_mode = indirect_x;

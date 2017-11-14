@@ -3,6 +3,7 @@
 
 int main(int argc, char **argv)
 {
+    setbuf(stdout, NULL);
     printf("Apple-I Computer\n");
     
     init(); // start the processor

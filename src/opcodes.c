@@ -38,6 +38,7 @@ void fetch_operand()
             address = read_word(pc);
             operand = read_byte(address);
             pc = pc + 2;
+            break;
         case absolute_x:
             address = read_word(pc);
             address = address + x;
@@ -69,7 +70,7 @@ void fetch_operand()
 
 void adc()
 {
-    // add memory to accumalator with carry
+    // add memory to accumulator with carry
     fetch_operand();
     ac = ac + operand + C_IS_SET;
 }

@@ -1,6 +1,7 @@
 #include "inc/types.h"
 #include "inc/rom.h"
 #include "inc/memory.h"
+#include <stdio.h>
 
 /*
     
@@ -76,6 +77,11 @@ void write_mem(dw address, db data)
     {
         // 4KB memory RAM
         ram_memory[address] = data;
+    }
+    else if (address == 0xD010)
+    {
+        // output character to video
+        printf("%c", data);
     }
     
     // any other addressed memory will be ignored on write
