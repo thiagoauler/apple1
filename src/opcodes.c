@@ -78,19 +78,27 @@ void fetch_operand()
     }
 }
 
-void adjustNZ(db a)
+void adjustNZ(db r)
 {
-    if (a == 0) { Z_SET; } else { Z_UNSET;}
-    a = a >> 7;
-    if (a == 0) { N_SET; } else { N_UNSET; } 
+    if (r == 0) { Z_SET; } else { Z_UNSET;}
+    r = r >> 7;
+    if (r == 1) { N_SET; } else { N_UNSET; } 
 }
 
 db adder(db a, db b)
 {
     db r = a + b;
+    db c = (a + b) >> 8;
     
-    // todo: adjust carry flag
-    // todo: adjust overflow flag
+    a = a & 0x7F;
+    b = b & 0x7F;
+    db cc = (a + b) >> 7;
+    
+    db v = c ^ cc;
+    
+    if (c == 1) { C_SET; } else { C_UNSET;}
+    if (v == 1) { V_SET; } else { V_UNSET; } 
+        
     adjustNZ(r);
     
     return r;
@@ -98,13 +106,11 @@ db adder(db a, db b)
 
 db subtractor(db a, db b)
 {
-    db r = a - b;
+    // negate b operand using 2's complement
+    b = b ^ 0xFF;
+    b = b + 1;
     
-    // todo: adjust carry flag
-    // todo: adjust overflow flag
-    adjustNZ(r);
-    
-    return r;
+    return adder(a, b);
 }
 
 void adc()
