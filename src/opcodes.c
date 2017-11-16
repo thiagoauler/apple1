@@ -75,6 +75,17 @@ void fetch_operand()
             operand = read_byte(address);
             pc = pc + 1;
             break;
+        case relative:
+            address = read_byte(pc);
+            if ((address >> 7) == 0)
+            {
+                address = pc + address;
+            }
+            else
+            {
+                address = pc - address;
+            }
+            break;
     }
 }
 
@@ -141,10 +152,9 @@ void bcc()
     // branch on carry clear
     if(!C_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
-    }
+	}
 }
 
 void bcs()
@@ -152,8 +162,7 @@ void bcs()
     // branch on carry set
     if(C_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -163,8 +172,7 @@ void beq()
     // branch on result zero
     if(Z_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -179,8 +187,7 @@ void bmi()
     // branch on result minus
     if(N_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -190,8 +197,7 @@ void bne()
     // branch on result not zero
     if(!Z_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -201,8 +207,7 @@ void bpl()
     // branch on result plus
     if(!N_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -217,8 +222,7 @@ void bvc()
     // branch on overflow clear
     if(!V_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }
@@ -228,8 +232,7 @@ void bvs()
     // branch on overflow set
     if(V_IS_SET)
     {
-        address = read_byte(pc);
-        address = address + pc;
+        fetch_operand();
         pc = address;
     }
 }

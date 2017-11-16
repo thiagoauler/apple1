@@ -44,7 +44,8 @@ enum address_mode
     absolute_y  = 0b110,
     absolute_x  = 0b111,
     indirect_x,
-    zero_page_y
+    zero_page_y,
+    relative
 };
 
 typedef enum opcodes_table oct;

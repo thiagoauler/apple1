@@ -9,12 +9,6 @@ void init()
 {
     // pc is set using 0xFFFC
     pc = read_word(0xFFFC);
-    
-    write_mem(0xD010, 'T');
-    write_mem(0xD010, 'E');
-    write_mem(0xD010, 'S');
-    write_mem(0xD010, 'T');
-    write_mem(0xD010, 'S');
 }
 
 void fetch()
@@ -64,6 +58,12 @@ void decode()
         {
             address_mode = absolute_y;
         }
+    }
+    
+    if ((ir & 0b00011111) == 0b00010000)
+    {
+        // adjust the addressing mode for branch intructions
+        address_mode = relative;
     }
 }
 
