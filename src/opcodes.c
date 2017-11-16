@@ -1,6 +1,16 @@
 #include "inc/opcodes.h"
 #include "inc/memory.h"
 
+dw pc; // program counter
+db ac; // accumulator
+db x;  // x register
+db y;  // y register
+db sp; // stack pointer
+db sr; // status register
+db ir; // instruction register
+
+am address_mode;
+
 dw address;
 db operand;
 
