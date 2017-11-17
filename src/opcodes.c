@@ -197,6 +197,10 @@ void bcc()
         fetch_operand();
         pc = address;
 	}
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void bcs()
@@ -207,6 +211,10 @@ void bcs()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void beq()
@@ -217,6 +225,10 @@ void beq()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void bit()
@@ -236,6 +248,10 @@ void bmi()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void bne()
@@ -246,6 +262,10 @@ void bne()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void bpl()
@@ -256,6 +276,10 @@ void bpl()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void brk()
@@ -274,6 +298,10 @@ void bvc()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void bvs()
@@ -284,6 +312,10 @@ void bvs()
         fetch_operand();
         pc = address;
     }
+	else
+	{
+	    pc = pc + 1;
+	}
 }
 
 void clc()

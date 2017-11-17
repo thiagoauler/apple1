@@ -31,7 +31,7 @@ void decode()
     db aaacc = (aaa << 2) | cc;
     db bbbcc = (bbb << 2) | cc;
     
-    opcode_in_list = ir;
+    opcode_in_list  = ir;
     opcode_in_table = aaacc;
     
     address_mode = bbb;

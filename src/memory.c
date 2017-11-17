@@ -78,10 +78,10 @@ void write_mem(dw address, db data)
         // 4KB memory RAM
         ram_memory[address] = data;
     }
-    else if (address == 0xD010)
+    else if (address == 0xD012)
     {
         // output character to video
-        printf("%c", data);
+        printf("%c", data & 0x7F);
     }
     
     // any other addressed memory will be ignored on write
