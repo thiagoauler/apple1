@@ -77,12 +77,16 @@ void fetch_operand()
             break;
         case relative:
             operand = read_byte(pc);
+            pc = pc + 1;
             if ((operand >> 7) == 0)
             {
                 address = pc + operand;
             }
             else
             {
+                // negate b operand using 2's complement
+                operand = operand ^ 0xFF;
+                operand = operand + 1;
                 address = pc - operand;
             }
             break;
@@ -131,11 +135,11 @@ void push_byte(db data)
 
 void push_word(dw data)
 {
-    db high = data &  0xFF;
-    db low  = data >> 8;
+    db low  = data &  0xFF;
+    db high = data >> 8;
     
-    push_byte(high);
     push_byte(low);
+    push_byte(high);
 }
 
 db pull_byte()
@@ -146,10 +150,9 @@ db pull_byte()
 
 dw pull_word()
 {
-    dw data;
-    
-    data = pull_byte() << 8;
-    data = data | pull_byte();
+    db high = pull_byte() << 8;
+    db low  = pull_byte();
+    dw data = high | low;
     
     return data;
 }
@@ -192,43 +195,31 @@ void asl()
 void bcc()
 {
     // branch on carry clear
+    fetch_operand();
     if(!C_IS_SET)
     {
-        fetch_operand();
         pc = address;
-	}
-	else
-	{
-	    pc = pc + 1;
 	}
 }
 
 void bcs()
 {
     // branch on carry set
+    fetch_operand();
     if(C_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void beq()
 {
     // branch on result zero
+    fetch_operand();
     if(Z_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void bit()
@@ -243,43 +234,31 @@ void bit()
 void bmi()
 {
     // branch on result minus
+    fetch_operand();
     if(N_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void bne()
 {
     // branch on result not zero
+    fetch_operand();
     if(!Z_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void bpl()
 {
     // branch on result plus
+    fetch_operand();
     if(!N_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void brk()
@@ -293,29 +272,21 @@ void brk()
 void bvc()
 {
     // branch on overflow clear
+    fetch_operand();
     if(!V_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void bvs()
 {
     // branch on overflow set
+    fetch_operand();
     if(V_IS_SET)
     {
-        fetch_operand();
         pc = address;
     }
-	else
-	{
-	    pc = pc + 1;
-	}
 }
 
 void clc()
@@ -435,8 +406,10 @@ void jpa()
 void jsr()
 {
     // jump to new location saving return address
-    push_word(pc);
     address = read_word(pc);
+    pc = pc + 2;
+    
+    push_word(pc);
     pc = address;
 }
 
