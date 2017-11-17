@@ -1,7 +1,6 @@
 #include "inc/types.h"
 #include "inc/rom.h"
 #include "inc/memory.h"
-#include <stdio.h>
 
 /*
     
@@ -33,7 +32,12 @@
 
  */
   
-db ram_memory[4096]; // total memory: 4KB
+db ram_memory[4096];  // total memory: 4KB
+
+db keyboard_buffer;   // 0xD010
+db keyboard_control;  // 0xD011
+db display_buffer;    // 0xD012
+db display_control;   // 0xD013
 
 db read_byte(dw address)
 {
@@ -42,6 +46,22 @@ db read_byte(dw address)
         // 4KB memory RAM
         return ram_memory[address];
     }
+    else if (address == 0xD010)
+    {
+        return keyboard_buffer;
+    }
+    else if (address == 0xD011)
+    {
+        return keyboard_control;
+    }
+    else if (address == 0xD012)
+    {
+        return display_buffer;
+    }
+    /*else if (address == 0xD013)
+    {
+        return display_control;
+    }*/
     else if (address >= 0xFF00 && address <= 0xFFFF)
     {
         // wozmon ROM
@@ -78,11 +98,22 @@ void write_mem(dw address, db data)
         // 4KB memory RAM
         ram_memory[address] = data;
     }
+    /*else if (address == 0xD010)
+    {
+        keyboard_buffer = data;
+    }*/
+    /*else if (address == 0xD011)
+    {
+        keyboard_control = data;
+    }*/
     else if (address == 0xD012)
     {
-        // output character to video
-        printf("%c", data & 0x7F);
+        display_buffer = data;
     }
+    /*else if (address == 0xD013)
+    {
+        display_control = data;
+    }*/
     
     // any other addressed memory will be ignored on write
 }

@@ -150,9 +150,9 @@ db pull_byte()
 
 dw pull_word()
 {
-    db high = pull_byte() << 8;
+    db high = pull_byte();
     db low  = pull_byte();
-    dw data = high | low;
+    dw data = high << 8 | low;
     
     return data;
 }
@@ -261,7 +261,7 @@ void bpl()
     }
 }
 
-void brk()
+void bkk()
 {
     // force break
     I_SET;
@@ -583,7 +583,6 @@ void sta()
     // store accumulator in memory
     fetch_operand();
     write_mem(address, ac);
-    //adjustNZ(y);
 }
 
 void stx()
@@ -591,7 +590,6 @@ void stx()
     // store index x in memory
     fetch_operand();
     write_mem(address, x);
-    //adjustNZ(x);
 }
 
 void sty()
@@ -599,7 +597,6 @@ void sty()
     // store index y in memory
     fetch_operand();
     write_mem(address, y);
-    //adjustNZ(y);
 }
 
 void tax()

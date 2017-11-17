@@ -64,7 +64,7 @@ void bit(void); // test bits in memory with accumulator
 void bmi(void); // branch on result minus
 void bne(void); // branch on result not zero
 void bpl(void); // branch on result plus
-void brk(void); // force break
+void bkk(void); // force break
 void bvc(void); // branch on overflow clear
 void bvs(void); // branch on overflow set
 void clc(void); // clear carry flag
