@@ -9,6 +9,7 @@ void init()
 {
     // pc is set using 0xFFFC
     pc = read_word(0xFFFC);
+    sp = 0xFF;
 }
 
 void fetch()
@@ -28,6 +29,7 @@ void decode()
     db  cc = (ir & 0b00000011);
     
     db aaacc = (aaa << 2) | cc;
+    db bbbcc = (bbb << 2) | cc;
     
     opcode_in_list = ir;
     opcode_in_table = aaacc;
@@ -60,7 +62,7 @@ void decode()
         }
     }
     
-    if ((ir & 0b00011111) == 0b00010000)
+    if (bbbcc == 0b10000)
     {
         // adjust the addressing mode for branch intructions
         address_mode = relative;

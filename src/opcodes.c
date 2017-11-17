@@ -76,14 +76,14 @@ void fetch_operand()
             pc = pc + 1;
             break;
         case relative:
-            address = read_byte(pc);
-            if ((address >> 7) == 0)
+            operand = read_byte(pc);
+            if ((operand >> 7) == 0)
             {
-                address = pc + address;
+                address = pc + operand;
             }
             else
             {
-                address = pc - address;
+                address = pc - operand;
             }
             break;
     }
@@ -98,14 +98,13 @@ void adjustNZ(db r)
 
 db adder(db a, db b)
 {
-    db r = a + b;
+    db r =  a + b;
     db c = (a + b) >> 8;
     
-    a = a & 0x7F;
-    b = b & 0x7F;
+    a = a & 0b01111111;
+    b = b & 0b01111111;
     db cc = (a + b) >> 7;
-    
-    db v = c ^ cc;
+    db v  =  c ^ cc;
     
     if (c == 1) { C_SET; } else { C_UNSET;}
     if (v == 1) { V_SET; } else { V_UNSET; } 
@@ -122,6 +121,37 @@ db subtractor(db a, db b)
     b = b + 1;
     
     return adder(a, b);
+}
+
+void push_byte(db data)
+{
+    write_mem(sp, data);
+    sp = sp - 1;
+}
+
+void push_word(dw data)
+{
+    db high = data &  0xFF;
+    db low  = data >> 8;
+    
+    push_byte(high);
+    push_byte(low);
+}
+
+db pull_byte()
+{
+    sp = sp + 1;
+    return read_byte(sp);
+}
+
+dw pull_word()
+{
+    dw data;
+    
+    data = pull_byte() << 8;
+    data = data | pull_byte();
+    
+    return data;
 }
 
 void adc()
@@ -143,7 +173,19 @@ void asl()
 {
     // shift left one bit (memory or accumulator)
     fetch_operand();
+    
+    if (operand >> 7) { C_SET; } else { C_UNSET; }
     operand = operand << 1;
+    
+    if (address_mode == accumulator)
+    {
+        ac = operand;
+    }
+    else
+    {
+        write_mem(address, operand);
+    }
+    
     adjustNZ(operand);
 }
 
@@ -180,6 +222,10 @@ void beq()
 void bit()
 {
     // test bits in memory with accumulator
+    fetch_operand();
+    if (operand & 0b10000000) { N_SET; } else { N_UNSET; }
+    if (operand & 0b01000000) { V_SET; } else { V_UNSET; }
+    if (operand & ac)         { Z_SET; } else { Z_UNSET; }
 }
 
 void bmi()
@@ -215,6 +261,9 @@ void bpl()
 void brk()
 {
     // force break
+    I_SET;
+    push_word(pc);
+    push_byte(sr);
 }
 
 void bvc()
@@ -264,21 +313,28 @@ void clv()
 void cmp()
 {
     // compare memory with accumulator
+    fetch_operand();
+    subtractor(ac, operand);
 }
 
 void cpx()
 {
     // compare memory and index x
+    fetch_operand();
+    subtractor(x, operand);
 }
 
 void cpy()
 {
     // compare memory and index y
+    fetch_operand();
+    subtractor(y, operand);
 }
 
 void dec()
 {
     // decrement memory by one
+    fetch_operand();
     operand = operand - 1;
     write_mem(address, operand);
     adjustNZ(operand);
@@ -301,13 +357,18 @@ void dey()
 void eor()
 {
     // exclusive-or memory with accumulator
+    fetch_operand();
+    ac = ac ^ operand;
+    adjustNZ(ac);
 }
 
 void inc()
 {
     // increment memory by one
+    fetch_operand();
     operand = operand + 1;
-    write_mem(address, operand); 
+    write_mem(address, operand);
+    adjustNZ(operand);
 }
 
 void inx()
@@ -342,29 +403,53 @@ void jpa()
 void jsr()
 {
     // jump to new location saving return address
+    push_word(pc);
+    address = read_word(pc);
+    pc = address;
 }
 
 void lda()
 {
     // load accumulator with memory
+    fetch_operand();
     ac = operand;
+    adjustNZ(ac);
 }
 
 void ldx()
 {
     // load index x with memory
+    fetch_operand();
     x = operand;
+    adjustNZ(x);
 }
 
 void ldy()
 {
     // load index y with memory
+    fetch_operand();
     y = operand;
+    adjustNZ(y);
 }
 
 void lsr()
 {
     // shift one bit right (memory or accumulator)
+    fetch_operand();
+    
+    if (operand & 1) { C_SET; } else { C_UNSET; }
+    operand = operand >> 1;
+    
+    if (address_mode == accumulator)
+    {
+        ac = operand;
+    }
+    else
+    {
+        write_mem(address, operand);
+    }
+    
+    adjustNZ(operand);
 }
 
 void nop()
@@ -375,51 +460,99 @@ void nop()
 void ora()
 {
     // or memory with accumulator
+    fetch_operand();
+    ac = ac | operand;
+    adjustNZ(ac);
 }
 
 void pha()
 {
     // push accumulator on stack
+    push_byte(ac);
 }
 
 void php()
 {
     // push processor status on stack
+    push_byte(sr);
 }
 
 void pla()
 {
     // pull accumulator from stack
+    ac = pull_byte();
 }
 
 void plp()
 {
     // pull processor status from stack
+    sr = pull_byte();
 }
 
 void rol()
 {
     // rotate on bit left (memory or accumulator)
+    db carry = C_IS_SET;
+    
+    fetch_operand();
+    
+    if (operand >> 7) { C_SET; } else { C_UNSET; }
+    operand = operand << 1;
+    operand = operand | carry;
+    
+    if (address_mode == accumulator)
+    {
+        ac = operand;
+    }
+    else
+    {
+        write_mem(address, operand);
+    }
+    
+    adjustNZ(operand);
 }
 
 void ror()
 {
     // rotate on bit right (memory or accumulator)
+    db carry = C_IS_SET << 7;
+    
+    fetch_operand();
+    
+    if (operand & 1) { C_SET; } else { C_UNSET; }
+    operand = operand >> 1;
+    operand = operand | carry;
+    
+    if (address_mode == accumulator)
+    {
+        ac = operand;
+    }
+    else
+    {
+        write_mem(address, operand);
+    }
+    
+    adjustNZ(operand);
 }
 
 void rti()
 {
     // return from interrupt
+    sr = pull_byte();
+    pc = pull_word();
 }
 
 void rts()
 {
     // retrun from subroutine
+    pc = pull_word();
 }
 
 void sbc()
 {
     // subtract memory from accumulator with borrow
+    fetch_operand();
+    ac = subtractor(ac, operand - C_IS_SET);
 }
 
 void sec()
@@ -443,22 +576,25 @@ void sei()
 void sta()
 {
     // store accumulator in memory
+    fetch_operand();
     write_mem(address, ac);
-    adjustNZ(y);
+    //adjustNZ(y);
 }
 
 void stx()
 {
     // store index x in memory
+    fetch_operand();
     write_mem(address, x);
-    adjustNZ(x);
+    //adjustNZ(x);
 }
 
 void sty()
 {
     // store index y in memory
+    fetch_operand();
     write_mem(address, y);
-    adjustNZ(y);
+    //adjustNZ(y);
 }
 
 void tax()
