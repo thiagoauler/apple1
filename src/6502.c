@@ -1,6 +1,7 @@
 #include "inc/types.h"
 #include "inc/memory.h"
 #include "inc/opcodes.h"
+#include "inc/interface.h"
 
 ocl opcode_in_list;
 oct opcode_in_table;
