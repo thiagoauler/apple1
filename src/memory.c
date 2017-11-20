@@ -58,10 +58,10 @@ db read_byte(dw address)
     {
         return display_buffer;
     }
-    /*else if (address == 0xD013)
+    else if (address == 0xD013)
     {
         return display_control;
-    }*/
+    }
     else if (address >= 0xFF00 && address <= 0xFFFF)
     {
         // wozmon ROM
@@ -98,22 +98,22 @@ void write_mem(dw address, db data)
         // 4KB memory RAM
         ram_memory[address] = data;
     }
-    /*else if (address == 0xD010)
+    else if (address == 0xD010)
     {
         keyboard_buffer = data;
-    }*/
-    /*else if (address == 0xD011)
+    }
+    else if (address == 0xD011)
     {
         keyboard_control = data;
-    }*/
+    }
     else if (address == 0xD012)
     {
         display_buffer = data;
     }
-    /*else if (address == 0xD013)
+    else if (address == 0xD013)
     {
         display_control = data;
-    }*/
+    }
     
     // any other addressed memory will be ignored on write
 }
