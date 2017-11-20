@@ -9,7 +9,7 @@ rm -f $EXEC_NAME
 # build all source code
 for FILE in $SRC_FOLDER/*.c
 do
-    cc -g -c $FILE -lcurses
+    cc -g -c $FILE
 done
 
 # move all objects to appropriate folder
