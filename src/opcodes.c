@@ -261,7 +261,7 @@ void bpl()
     }
 }
 
-void bkk()
+void brk()
 {
     // force break
     I_SET;
