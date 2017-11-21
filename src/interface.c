@@ -8,12 +8,15 @@ void io_init()
     noecho();
     cbreak();
     nodelay(stdscr, TRUE);
+    
+    keyboard_control = 0x00;
 }
 
 void input()
 {
     int ch = getch();
-    if (ch != ERR)
+    if (ch == '\n') { ch = '\r'; }
+    if (ch == '\r' || (ch >= '0' && ch <= '9'))
     {
         keyboard_buffer  = ch | 0x80;
         keyboard_control = 0xFF;
@@ -27,9 +30,10 @@ void output()
     {
         // outputs the buffer character
         display_buffer = display_buffer & 0x7F;
+        if (display_buffer == '\r')
+        {
+            display_buffer = '\n';
+        }
         addch(display_buffer);
-        //refresh();
     }
-    
-    //refresh();
 }
