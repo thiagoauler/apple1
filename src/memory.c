@@ -48,6 +48,7 @@ db read_byte(dw address)
     }
     else if (address == 0xD010)
     {
+        keyboard_control = 0x00;
         return keyboard_buffer;
     }
     else if (address == 0xD011)
