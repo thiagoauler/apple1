@@ -308,21 +308,24 @@ void cmp()
 {
     // compare memory with accumulator
     fetch_operand();
-    subtractor(ac, operand);
+    operand = operand ^ 0xFF;
+    adder(ac, operand);
 }
 
 void cpx()
 {
     // compare memory and index x
     fetch_operand();
-    subtractor(x, operand);
+    operand = operand ^ 0xFF;
+    adder(x, operand);
 }
 
 void cpy()
 {
     // compare memory and index y
     fetch_operand();
-    subtractor(y, operand);
+    operand = operand ^ 0xFF;
+    adder(y, operand);
 }
 
 void dec()
