@@ -102,13 +102,13 @@ void adjustNZ(db r)
 
 db adder(db a, db b)
 {
-    db r =  a + b;
-    db c = (a + b) >> 8;
+    db r =  a + b + C_IS_SET;
+    db c = (a + b + C_IS_SET) >> 8;
     
-    a = a & 0b01111111;
-    b = b & 0b01111111;
-    db cc = (a + b) >> 7;
-    db v  =  c ^ cc;
+    a = a & 0x7F;
+    b = b & 0x7F;
+    db z = (a + b + C_IS_SET) >> 7;
+    db v =  c ^ z;
     
     if (c == 1) { C_SET; } else { C_UNSET;}
     if (v == 1) { V_SET; } else { V_UNSET; } 
@@ -116,15 +116,6 @@ db adder(db a, db b)
     adjustNZ(r);
     
     return r;
-}
-
-db subtractor(db a, db b)
-{
-    // negate b operand using 2's complement
-    b = b ^ 0xFF;
-    b = b + 1;
-    
-    return adder(a, b);
 }
 
 void push_byte(db data)
@@ -161,7 +152,7 @@ void adc()
 {
     // add memory to accumulator with carry
     fetch_operand();
-    ac = adder(ac, operand + C_IS_SET);
+    ac = adder(ac, operand);
 }
 
 void and()
@@ -557,7 +548,8 @@ void sbc()
 {
     // subtract memory from accumulator with borrow
     fetch_operand();
-    ac = subtractor(ac, operand - C_IS_SET);
+    operand = operand ^ 0xFF;
+    ac = adder(ac, operand);
 }
 
 void sec()
