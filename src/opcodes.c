@@ -95,7 +95,7 @@ void fetch_operand()
 
 void adjustNZ(db r)
 {
-    if (r == 0) { Z_SET; } else { Z_UNSET;}
+    if (r == 0) { Z_SET; } else { Z_UNSET; }
     r = r >> 7;
     if (r == 1) { N_SET; } else { N_UNSET; } 
 }
@@ -110,7 +110,7 @@ db adder(db a, db b)
     db z = (a + b + C_IS_SET) >> 7;
     db v =  c ^ z;
     
-    if (c == 1) { C_SET; } else { C_UNSET;}
+    if (c == 1) { C_SET; } else { C_UNSET; }
     if (v == 1) { V_SET; } else { V_UNSET; } 
         
     adjustNZ(r);
@@ -307,6 +307,7 @@ void clv()
 void cmp()
 {
     // compare memory with accumulator
+    C_SET;
     fetch_operand();
     operand = operand ^ 0xFF;
     adder(ac, operand);
@@ -315,6 +316,7 @@ void cmp()
 void cpx()
 {
     // compare memory and index x
+    C_SET;
     fetch_operand();
     operand = operand ^ 0xFF;
     adder(x, operand);
@@ -323,6 +325,7 @@ void cpx()
 void cpy()
 {
     // compare memory and index y
+    C_SET;
     fetch_operand();
     operand = operand ^ 0xFF;
     adder(y, operand);

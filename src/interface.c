@@ -16,7 +16,9 @@ void input()
 {
     int ch = getch();
     if (ch == '\n') { ch = '\r'; }
-    if (ch == '\r' || (ch >= '0' && ch <= '9'))
+    if (ch == '\r' || ch == '.' || ch == ':' ||
+       (ch >= '0' && ch <= '9') ||
+       (ch >= 'A' && ch <= 'Z'))
     {
         keyboard_buffer  = ch | 0x80;
         keyboard_control = 0xFF;
