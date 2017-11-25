@@ -17,4 +17,4 @@ mkdir -p $OBJ_FOLDER
 mv *.o $OBJ_FOLDER
 
 # create executable out of the objects
-cc -g -o $EXEC_NAME $OBJ_FOLDER/*.o
+cc -g -o $EXEC_NAME $OBJ_FOLDER/*.o -lcurses

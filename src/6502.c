@@ -1,14 +1,15 @@
-#include <stdio.h>
-
 #include "inc/types.h"
 #include "inc/memory.h"
 #include "inc/opcodes.h"
+#include "inc/interface.h"
 
 ocl opcode_in_list;
 oct opcode_in_table;
 
 void init()
 {
+    io_init();
+    
     // pc is set using 0xFFFC
     pc = read_word(0xFFFC);
     sp = 0xFF;
@@ -81,7 +82,7 @@ void execute()
         case BMI: return bmi();
         case BNE: return bne();
         case BPL: return bpl();
-        case BRK: return bkk();
+        case BRK: return brk();
         case BVC: return bvc();
         case BVS: return bvs();
         case CLC: return clc();
@@ -139,25 +140,6 @@ void execute()
     }
 }
 
-void display()
-{
-    //if (display_control == 0xA7)
-    {
-        // display is ready to ouptup
-        if (display_buffer & 0x80)
-        {
-            // outputs the buffer character
-            display_buffer = display_buffer & 0x7F;
-            printf("%c", display_buffer);
-        }
-    }
-}
-
-void read_input()
-{
-    // verifies if the keyboard is being pressed...
-}
-
 void run()
 {
     while (1)
@@ -166,8 +148,8 @@ void run()
         decode();
         execute();
         
-        display();
-        read_input();
+        input();
+        output();
     }
     
 }
