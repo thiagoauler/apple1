@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF6E24011FCA36F200FCD6DE /* interface.c in Sources */ = {isa = PBXBuildFile; fileRef = AF6E24001FCA36F200FCD6DE /* interface.c */; };
 		AFF1A1EE1FBD2A9C0069B921 /* 6502.c in Sources */ = {isa = PBXBuildFile; fileRef = AFF1A1E91FBD2A9B0069B921 /* 6502.c */; };
 		AFF1A1EF1FBD2A9C0069B921 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = AFF1A1EA1FBD2A9B0069B921 /* main.c */; };
 		AFF1A1F01FBD2A9C0069B921 /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = AFF1A1EB1FBD2A9C0069B921 /* memory.c */; };
@@ -26,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AF6E24001FCA36F200FCD6DE /* interface.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = interface.c; path = src/interface.c; sourceTree = "<group>"; };
 		AFF1A1DF1FBD2A490069B921 /* apple1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = apple1; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFF1A1E91FBD2A9B0069B921 /* 6502.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = 6502.c; path = src/6502.c; sourceTree = "<group>"; };
 		AFF1A1EA1FBD2A9B0069B921 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = src/main.c; sourceTree = "<group>"; };
@@ -48,11 +50,12 @@
 		AFF1A1D61FBD2A490069B921 = {
 			isa = PBXGroup;
 			children = (
-				AFF1A1E91FBD2A9B0069B921 /* 6502.c */,
 				AFF1A1EC1FBD2A9C0069B921 /* inc */,
 				AFF1A1EA1FBD2A9B0069B921 /* main.c */,
-				AFF1A1EB1FBD2A9C0069B921 /* memory.c */,
+				AFF1A1E91FBD2A9B0069B921 /* 6502.c */,
 				AFF1A1ED1FBD2A9C0069B921 /* opcodes.c */,
+				AFF1A1EB1FBD2A9C0069B921 /* memory.c */,
+				AF6E24001FCA36F200FCD6DE /* interface.c */,
 				AFF1A1E01FBD2A490069B921 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF6E24011FCA36F200FCD6DE /* interface.c in Sources */,
 				AFF1A1EE1FBD2A9C0069B921 /* 6502.c in Sources */,
 				AFF1A1F11FBD2A9C0069B921 /* opcodes.c in Sources */,
 				AFF1A1F01FBD2A9C0069B921 /* memory.c in Sources */,
@@ -183,6 +187,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lcurses";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -231,6 +236,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-lcurses";
 				SDKROOT = macosx;
 			};
 			name = Release;
