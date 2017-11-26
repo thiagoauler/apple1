@@ -48,6 +48,8 @@ db read_byte(dw address)
     }
     else if (address == 0xD010)
     {
+        // when reading from keyboard buffer,
+        // its status control is disabled again
         keyboard_control = 0x00;
         return keyboard_buffer;
     }
@@ -58,10 +60,6 @@ db read_byte(dw address)
     else if (address == 0xD012)
     {
         return display_buffer;
-    }
-    else if (address == 0xD013)
-    {
-        return display_control;
     }
     else if (address >= 0xFF00 && address <= 0xFFFF)
     {
@@ -99,21 +97,9 @@ void write_mem(dw address, db data)
         // 4KB memory RAM
         ram_memory[address] = data;
     }
-    else if (address == 0xD010)
-    {
-        keyboard_buffer = data;
-    }
-    else if (address == 0xD011)
-    {
-        keyboard_control = data;
-    }
     else if (address == 0xD012)
     {
         display_buffer = data;
-    }
-    else if (address == 0xD013)
-    {
-        display_control = data;
     }
     
     // any other addressed memory will be ignored on write
