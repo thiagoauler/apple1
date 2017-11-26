@@ -7,7 +7,10 @@ void io_init()
     initscr();
     noecho();
     cbreak();
+    
+    scrollok(stdscr, TRUE);
     nodelay(stdscr, TRUE);
+    keypad(stdscr, TRUE);
     
     keyboard_control = 0x00;
 }
