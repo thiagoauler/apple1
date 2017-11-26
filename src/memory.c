@@ -1,5 +1,6 @@
 #include "inc/types.h"
 #include "inc/rom.h"
+#include "inc/basic.h"
 #include "inc/memory.h"
 
 /*
@@ -60,6 +61,12 @@ db read_byte(dw address)
     else if (address == 0xD012)
     {
         return display_buffer;
+    }
+    else if (address >= 0xE000 && address <= 0xEFFF)
+    {
+        // AppleSoft Basic
+        address = address & 0xFFF;
+        return basic_memory[address];
     }
     else if (address >= 0xFF00 && address <= 0xFFFF)
     {
