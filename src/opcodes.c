@@ -451,7 +451,7 @@ void lsr()
         write_mem(address, operand);
     }
     
-    adjustNZ(operand);
+    adjustNZ(operand); // TODO: revise this code... probably LSR doesnt affect 'N'
 }
 
 void nop()
