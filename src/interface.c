@@ -12,6 +12,8 @@ void io_init()
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
     
+    curs_set(FALSE);
+    
     keyboard_control = 0x00;
 }
 
