@@ -21,7 +21,7 @@ void input()
 {
     int ch = getch();
     if (ch == '\n') { ch = '\r'; }
-    if (ch == '\r' || ch == '.' || ch == ':' ||
+    if (ch == '\r' || ch == '.' || ch == ':' || ch == ' ' ||
        (ch >= '0' && ch <= '9') ||
        (ch >= 'A' && ch <= 'Z'))
     {
