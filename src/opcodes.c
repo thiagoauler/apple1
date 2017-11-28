@@ -258,6 +258,7 @@ void brk()
     I_SET;
     push_word(pc);
     push_byte(sr);
+    pc = read_word(0xFFEF);
 }
 
 void bvc()

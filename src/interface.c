@@ -21,8 +21,9 @@ void input()
 {
     int ch = getch();
     
-    if (ch == 0x7F) { ch = '_'; }
-    if (ch == '\n') { ch = '\r'; }
+    if (ch == 0x107) { ch = '_';  }
+    if (ch ==  0x7F) { ch = '_';  }
+    if (ch ==  '\n') { ch = '\r'; }
     if (ch >= 'a' && ch <= 'z') { ch = ch - 0x20; }
     
     if (ch == '\r' || (ch >= 0x20 && ch <= 0x7F))
