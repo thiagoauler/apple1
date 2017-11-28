@@ -42,5 +42,6 @@ void output()
             display_buffer = '\n';
         }
         addch(display_buffer);
+        refresh();
     }
 }
