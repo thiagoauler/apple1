@@ -14,12 +14,21 @@
          contextName = "run:6502.c">
          <PersistentStrings>
             <PersistentString
+               value = "ir">
+            </PersistentString>
+            <PersistentString
+               value = "pc">
+            </PersistentString>
+            <PersistentString
                value = "address_mode">
             </PersistentString>
             <PersistentString
                value = "display_buffer">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "read_byte:memory.c">
       </ContextState>
       <ContextState
          contextName = "bpl:opcodes.c">
