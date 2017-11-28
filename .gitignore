@@ -1,3 +1,4 @@
 obj
 apple1
+*.xcodeproj
 .DS_Store
