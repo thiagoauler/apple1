@@ -47,24 +47,24 @@ db read_byte(dw address)
         // 32KB memory RAM
         return ram_memory[address];
     }
-    else if (address == 0xD010 || address == 0xD0F0)
+    else if (address == 0xD010)
     {
         // when reading from keyboard buffer,
         // its status control is disabled again
         keyboard_control = 0x00;
         return keyboard_buffer;
     }
-    else if (address == 0xD011 || address == 0xD0F1)
+    else if (address == 0xD011)
     {
         return keyboard_control;
     }
-    else if (address == 0xD012 || address == 0xD0F2)
+    else if (address == 0xD012)
     {
         return display_buffer;
     }
     else if (address >= 0xE000 && address <= 0xEFFF)
     {
-        // AppleSoft Basic
+        // BASIC
         address = address & 0xFFF;
         return basic_memory[address];
     }
@@ -104,7 +104,7 @@ void write_mem(dw address, db data)
         // 32KB memory RAM
         ram_memory[address] = data;
     }
-    else if (address == 0xD012 || address == 0xD0F2)
+    else if (address == 0xD012)
     {
         display_buffer = data;
     }
