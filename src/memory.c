@@ -106,7 +106,7 @@ void write_mem(dw address, db data)
     }
     else if (address == 0xD012)
     {
-        display_buffer = data;
+        display_buffer = data | 0x80;
     }
     
     // any other addressed memory will be ignored on write
