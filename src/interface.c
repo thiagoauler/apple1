@@ -12,7 +12,7 @@ void io_init()
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
     
-    curs_set(FALSE);
+    //curs_set(FALSE);
     
     keyboard_control = 0x00;
 }
@@ -20,10 +20,12 @@ void io_init()
 void input()
 {
     int ch = getch();
+    
+    if (ch == 0x7F) { ch = '_'; }
     if (ch == '\n') { ch = '\r'; }
-    if (ch == '\r' || ch == '.' || ch == ':' || ch == ' ' ||
-       (ch >= '0' && ch <= '9') ||
-       (ch >= 'A' && ch <= 'Z'))
+    if (ch >= 'a' && ch <= 'z') { ch = ch - 0x20; }
+    
+    if (ch == '\r' || (ch >= 0x20 && ch <= 0x7F))
     {
         keyboard_buffer  = ch | 0x80;
         keyboard_control = 0xFF;
