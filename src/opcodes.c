@@ -120,7 +120,7 @@ db adder(db a, db b)
 
 void push_byte(db data)
 {
-    write_mem(sp, data);
+    write_mem(0x0100 + sp, data);
     sp = sp - 1;
 }
 
@@ -136,7 +136,7 @@ void push_word(dw data)
 db pull_byte()
 {
     sp = sp + 1;
-    return read_byte(sp);
+    return read_byte(0x0100 + sp);
 }
 
 dw pull_word()
@@ -451,7 +451,7 @@ void lsr()
         write_mem(address, operand);
     }
     
-    adjustNZ(operand); // TODO: revise this code... probably LSR doesnt affect 'N'
+    adjustNZ(operand);
 }
 
 void nop()
