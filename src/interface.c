@@ -43,7 +43,10 @@ void output()
         {
             display_buffer = '\n';
         }
-        addch(display_buffer);
-        refresh();
+        if (display_buffer != 0x7F)
+        {
+            addch(display_buffer);
+            refresh();
+        }
     }
 }
