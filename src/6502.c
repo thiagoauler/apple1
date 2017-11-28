@@ -13,6 +13,10 @@ void init()
     // pc is set using 0xFFFC
     pc = read_word(0xFFFC);
     sp = 0xFF;
+    sr = 0x20;
+    ac = 0x00;
+    x  = 0x00;
+    y  = 0x00;
 }
 
 void fetch()
