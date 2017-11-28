@@ -20,6 +20,9 @@
                value = "pc">
             </PersistentString>
             <PersistentString
+               value = "sp">
+            </PersistentString>
+            <PersistentString
                value = "address_mode">
             </PersistentString>
             <PersistentString
