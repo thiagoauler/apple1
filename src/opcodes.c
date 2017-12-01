@@ -389,9 +389,19 @@ void iny()
 void jmp()
 {
     // jump to new location (indirect)
-    address = read_word(pc);
-    address = read_word(address);
-    pc = address;
+    // this jump instruction has a known bug where the MSB does not cross pages
+    // i.e. if the LSB is in address 0xC0FF, then the MSB will be in 0xC000
+    db lsb, msb;
+    dw lsb_addr, msb_addr;
+    
+    lsb_addr = read_word(pc);
+    lsb = read_byte(lsb_addr);
+    
+    msb_addr = (lsb_addr + 1) & 0x00FF;
+    msb_addr = (lsb_addr      & 0xFF00) | msb_addr;
+    msb = read_word(msb_addr);
+	
+    pc = (msb << 8) | lsb;
 }
 
 void jpa()
